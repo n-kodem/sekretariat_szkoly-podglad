@@ -7,19 +7,19 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
     <Button
-            android:text="Button"
+            android:text="Wczytaj dane"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/button"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.049"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.109"/>
     <ScrollView
-            android:layout_width="349dp"
-            android:layout_height="347dp"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.5"
+            android:layout_width="406dp"
+            android:layout_height="441dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.529"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button">
+            app:layout_constraintTop_toBottomOf="@+id/button" app:layout_constraintVertical_bias="0.304">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical"/>
+                      android:orientation="vertical" android:background="#AC3636"/>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
