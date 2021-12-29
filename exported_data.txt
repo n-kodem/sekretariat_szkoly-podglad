@@ -1,0 +1,4 @@
+﻿Imię,Drugię imię,Nazwisko,Nazwisko Panieńskie,Imiona Rodziców,Płeć,Pesel,Data Urodzenia,Data Zatrudnienia,Opis Stanowiska,Etat
+Nikodem,Rafał,Reszka,brak,Joanna Rafał,Mężczyzna,2137,01.12.2021 00:00:00,22.12.2021 00:00:00,Programista w HTML,pełny
+Nikodem,Rafał,Reszka,,Joanna Rafał,Mężczyzna,2137,25.05.2005 00:00:00,23.05.2005 00:00:00,Programista w HTML,pełny
+,,,,,,,,,,
