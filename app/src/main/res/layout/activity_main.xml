@@ -9,17 +9,39 @@
     <Button
             android:text="Wczytaj dane"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/button"
+            android:layout_height="wrap_content" android:id="@+id/loadDataButton"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.049"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.109"/>
-    <ScrollView
-            android:layout_width="406dp"
-            android:layout_height="441dp"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.529"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button" app:layout_constraintVertical_bias="0.304">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical" android:background="#AC3636"/>
-    </ScrollView>
+
+    <LinearLayout
+            android:layout_width="372dp"
+            android:layout_height="257dp"
+            android:orientation="vertical" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        <ScrollView
+                android:id="@+id/layout"
+                android:layout_height="match_parent"
+                android:scrollbars="horizontal|vertical"
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dip"
+                android:scrollbarStyle="outsideInset"
+                android:fillViewport="true">
+
+            <HorizontalScrollView
+                    android:id="@+id/horizontalView"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal|vertical"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dip">
+
+                <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/itemtable">
+                </TableLayout>
+            </HorizontalScrollView>
+        </ScrollView>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
