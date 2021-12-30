@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity() {
         view.findViewById<Button>(R.id.loadDataButton).setOnClickListener {
             if(view.findViewById<EditText>(R.id.urlContainer).text.toString()!=""){
                 dataTable.clear()
-                Log.d("WTF",view.findViewById<EditText>(R.id.urlContainer).text.toString())
                 Thread {
                     try{
                         val urls = ArrayList<String>()
@@ -89,6 +88,7 @@ class MainActivity : AppCompatActivity() {
 
                         this.runOnUiThread(Runnable {
                             for(element in urls){
+
                                 dataTable.add(element.split(",").toMutableList())
                             }
 
@@ -103,9 +103,8 @@ class MainActivity : AppCompatActivity() {
                             val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayList)
                             sortBy.adapter = arrayAdapter
                             whereItem.adapter = arrayAdapter
-                            sortBy.setSelection(1)
+                            sortBy.setSelection(0)
                             generateTable()
-
                         })
                     }catch (err:Exception){
                         val snackbar = Snackbar.make(
