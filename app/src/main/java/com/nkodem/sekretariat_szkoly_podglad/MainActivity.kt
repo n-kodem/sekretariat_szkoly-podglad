@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -12,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -26,8 +29,12 @@ class MainActivity : AppCompatActivity() {
         val view = this
         val spinner:Spinner = view.findViewById(R.id.sortBy)
         val ordType:Spinner = view.findViewById(R.id.orderType)
+        val whereItem:Spinner = view.findViewById(R.id.whereItem)
+        val valueToFind:EditText = view.findViewById(R.id.valueToFind)
         spinner.isVisible=false
         ordType.isVisible=false
+        whereItem.isVisible=false
+        valueToFind.isVisible=false
         StrictMode.setThreadPolicy(policy)
         val table = view.findViewById<TableLayout>(R.id.itemtable)
 
@@ -47,7 +54,9 @@ class MainActivity : AppCompatActivity() {
             table.addView(firstRow)
 
             var dataSorted = dataTable.subList(1,dataTable.size-1).sortedBy { it[spinner.selectedItemPosition] }
-            //dataSorted.filter {  }
+            if(valueToFind.text.toString()!="" && whereItem.selectedItem!=""){
+                dataSorted=dataSorted.filter { it[whereItem.selectedItemPosition]==valueToFind.text.toString() }
+            }
             if(ordType.selectedItemPosition==1) {
                 dataSorted = dataSorted.reversed()
             }
@@ -93,12 +102,15 @@ class MainActivity : AppCompatActivity() {
 
                             spinner.isVisible=true
                             ordType.isVisible=true
+                            whereItem.isVisible=true
+                            valueToFind.isVisible=true
                             val arrayList: ArrayList<String> = ArrayList()
                             for(element in dataTable[0]){
                                 arrayList.add(element)
                             }
                             val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayList)
                             spinner.adapter = arrayAdapter
+                            whereItem.adapter = arrayAdapter
                             spinner.setSelection(1)
                             sortTable()
 
@@ -144,5 +156,18 @@ class MainActivity : AppCompatActivity() {
         }
         spinner.onItemSelectedListener = spinnersBeLike
         ordType.onItemSelectedListener = spinnersBeLike
+        valueToFind.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                sortTable()
+            }
+        })
     }
 }

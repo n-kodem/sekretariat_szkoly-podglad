@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">sekretariat_szkoly-podglad</string>
     <string name="urlHint">Enter URL</string>
+    <string name="whereClausureHint">Value to find</string>
     <string name="btnText">Get Data</string>
     <string-array name="orderTypeArr">
         <item>Rosnąco</item>
