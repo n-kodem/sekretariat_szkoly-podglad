@@ -1,6 +1,5 @@
 package com.nkodem.sekretariat_szkoly_podglad
 
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
@@ -14,7 +13,6 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -27,11 +25,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val policy = ThreadPolicy.Builder().permitAll().build()
         val view = this
-        val spinner:Spinner = view.findViewById(R.id.sortBy)
+        val sortBy:Spinner = view.findViewById(R.id.sortBy)
         val ordType:Spinner = view.findViewById(R.id.orderType)
         val whereItem:Spinner = view.findViewById(R.id.whereItem)
         val valueToFind:EditText = view.findViewById(R.id.valueToFind)
-        spinner.isVisible=false
+        sortBy.isVisible=false
         ordType.isVisible=false
         whereItem.isVisible=false
         valueToFind.isVisible=false
@@ -40,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         var dataTable: MutableList<MutableList<String>> = mutableListOf()
 
-        fun sortTable(){
+        fun generateTable(){
             table.removeAllViews()
             val firstRow = TableRow(this@MainActivity)
             for (column in dataTable[0]) {
@@ -53,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
             table.addView(firstRow)
 
-            var dataSorted = dataTable.subList(1,dataTable.size-1).sortedBy { it[spinner.selectedItemPosition] }
+            var dataSorted = dataTable.subList(1,dataTable.size-1).sortedBy { it[sortBy.selectedItemPosition] }
             if(valueToFind.text.toString()!="" && whereItem.selectedItem!=""){
                 dataSorted=dataSorted.filter { it[whereItem.selectedItemPosition]==valueToFind.text.toString() }
             }
@@ -76,16 +74,12 @@ class MainActivity : AppCompatActivity() {
 
         view.findViewById<Button>(R.id.loadDataButton).setOnClickListener {
             if(view.findViewById<EditText>(R.id.urlContainer).text.toString()!=""){
-                table.removeAllViews()
-                table.refreshDrawableState()
                 dataTable.clear()
                 Log.d("WTF",view.findViewById<EditText>(R.id.urlContainer).text.toString())
                 Thread {
                     try{
                         val urls = ArrayList<String>()
-                        // Create a URL for the desired page
-                        val url = URL(view.findViewById<EditText>(R.id.urlContainer).text.toString()) //My text file location
-                        //First open the connection
+                        val url = URL(view.findViewById<EditText>(R.id.urlContainer).text.toString())
                         val conn = url.openConnection() as HttpURLConnection
                         conn.connectTimeout = 60000 // timing out in a minute
                         val `in` = BufferedReader(InputStreamReader(conn.inputStream))
@@ -93,14 +87,12 @@ class MainActivity : AppCompatActivity() {
                         while (`in`.readLine()?.also { it.toString().let { it1->urls.add(it1) } } != null) {}
                         `in`.close()
 
-
-                        //since we are in background thread, to post results we have to go back to ui thread. do the following for that
                         this.runOnUiThread(Runnable {
                             for(element in urls){
                                 dataTable.add(element.split(",").toMutableList())
                             }
 
-                            spinner.isVisible=true
+                            sortBy.isVisible=true
                             ordType.isVisible=true
                             whereItem.isVisible=true
                             valueToFind.isVisible=true
@@ -109,10 +101,10 @@ class MainActivity : AppCompatActivity() {
                                 arrayList.add(element)
                             }
                             val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayList)
-                            spinner.adapter = arrayAdapter
+                            sortBy.adapter = arrayAdapter
                             whereItem.adapter = arrayAdapter
-                            spinner.setSelection(1)
-                            sortTable()
+                            sortBy.setSelection(1)
+                            generateTable()
 
                         })
                     }catch (err:Exception){
@@ -148,25 +140,22 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {}
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                sortTable()
+                generateTable()
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {}
 
         }
-        spinner.onItemSelectedListener = spinnersBeLike
+        sortBy.onItemSelectedListener = spinnersBeLike
         ordType.onItemSelectedListener = spinnersBeLike
         valueToFind.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {}
 
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int,count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-                sortTable()
+            override fun onTextChanged(s: CharSequence, start: Int,before: Int, count: Int) {
+                generateTable()
             }
         })
     }
