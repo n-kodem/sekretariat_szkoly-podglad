@@ -1,5 +1,7 @@
 package com.nkodem.sekretariat_szkoly_podglad
 
+import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
@@ -8,9 +10,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
 import java.io.BufferedReader
@@ -23,6 +30,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        val window: Window = this@MainActivity.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.purple_200)
         val policy = ThreadPolicy.Builder().permitAll().build()
         val view = this
         val sortBy:Spinner = view.findViewById(R.id.sortBy)
@@ -36,14 +48,20 @@ class MainActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
         val table = view.findViewById<TableLayout>(R.id.itemtable)
 
-        var dataTable: MutableList<MutableList<String>> = mutableListOf()
-
+        val dataTable: MutableList<MutableList<String>> = mutableListOf()
+        fun Activity.hideKeyboard() {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.findViewById<View>(android.R.id.content).getWindowToken(), 0)
+        }
         fun generateTable(){
+            hideKeyboard()
+            table.setBackgroundColor(Color.BLUE)
             table.removeAllViews()
             val firstRow = TableRow(this@MainActivity)
             for (column in dataTable[0]) {
                 val tv = TextView(this@MainActivity)
                 tv.setPadding(10,10,10,10)
+                tv.setBackgroundColor(Color.parseColor("#1c3860"))
                 tv.textAlignment= View.TEXT_ALIGNMENT_CENTER
                 tv.text = column
                 firstRow.addView(tv)
@@ -63,7 +81,9 @@ class MainActivity : AppCompatActivity() {
                 row.weightSum=30F
                 for (column in element) {
                     val tv = TextView(this@MainActivity)
+
                     tv.setPadding(10,10,10,10)
+                    tv.setBackgroundColor(Color.parseColor("#61a7f8"))
                     tv.textAlignment= View.TEXT_ALIGNMENT_CENTER
                     tv.text = column
                     row.addView(tv)
@@ -100,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                             for(element in dataTable[0]){
                                 arrayList.add(element)
                             }
-                            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayList)
+                            val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, arrayList)
                             sortBy.adapter = arrayAdapter
                             whereItem.adapter = arrayAdapter
                             sortBy.setSelection(0)
@@ -157,5 +177,7 @@ class MainActivity : AppCompatActivity() {
                 generateTable()
             }
         })
+
     }
+
 }
